@@ -1,0 +1,15 @@
+{
+  "name": "netbus",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "files": [
+    "src/"
+  ],
+  "exports": {
+    ".": "./src/bus.js"
+  },
+  "types": "src/bus.d.ts",
+  "dependencies": {
+    "mqtt": "^5.0.1"
+  }
+}
