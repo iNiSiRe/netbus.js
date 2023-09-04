@@ -3,12 +3,17 @@
   "type": "commonjs",
   "version": "1.0.0",
   "files": [
+    "build/",
     "src/"
   ],
   "exports": {
-    ".": "./src/bus.js"
+    ".": "./build/bus.js"
   },
-  "types": "src/bus.d.ts",
+  "types": "build/bus.d.ts",
+  "scripts": {
+    "build": "rm -rf ./build && npx tsc",
+    "prepare": "npm run build"
+  },
   "dependencies": {
     "mqtt": "^5.0.1"
   }
