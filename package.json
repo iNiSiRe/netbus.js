@@ -11,7 +11,7 @@
   },
   "types": "build/bus.d.ts",
   "scripts": {
-    "build": "rm -rf ./build && npx tsc",
+    "build": "rm -rf ./build && tsc",
     "prepare": "npm run build"
   },
   "dependencies": {
