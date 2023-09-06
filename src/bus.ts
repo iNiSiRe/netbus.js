@@ -2,31 +2,32 @@
 
 import * as mqtt from "mqtt";
 
-export class Event
+export class Event<T>
 {
     constructor(
         public readonly name: string,
-        public readonly data: any = null
+        public readonly data: T
     ) {
     }
 }
 
-export class RemoteEvent extends Event
+export class RemoteEvent<T> extends Event<T>
 {
     constructor(
         public readonly source: string,
         name: string,
-        data: any
+        data: T
     ) {
         super(name, data);
     }
 }
 
-export class Query {
+export class Query<T>
+{
     public readonly name: string;
-    public readonly data: any;
+    public readonly data: T;
 
-    constructor(name: string, data: any) {
+    constructor(name: string, data: T) {
         this.name = name;
         this.data = data;
     }
@@ -42,8 +43,8 @@ export class Result {
     }
 }
 
-export type EventHandler = (arg1: RemoteEvent) => void;
-export type QueryHandler = (arg1: Query) => Promise<Result>;
+export type EventHandler = (arg1: RemoteEvent<any>) => void;
+export type QueryHandler = (arg1: Query<any>) => Promise<Result>;
 
 export class Connector {
     static async connect(busId: string, host: string): Promise<Bus>
@@ -136,7 +137,7 @@ export class Bus
         }
     }
 
-    private handleQuery(query: Query): Promise<Result>
+    private handleQuery(query: Query<any>): Promise<Result>
     {
         const handler = this.queryHandlers.get(query.name);
 
@@ -147,7 +148,7 @@ export class Bus
         return handler(query);
     }
 
-    private handleEvent(event: RemoteEvent): void
+    private handleEvent(event: RemoteEvent<any>): void
     {
         this.handlers.forEach((handlers, name) => {
             if (event.name === name) {
@@ -169,7 +170,7 @@ export class Bus
         handler(result);
     }
 
-    public dispatch(event: Event): void
+    public dispatch(event: Event<any>): void
     {
         this.client.publish(`bus/${this.busId}/events`, JSON.stringify({src: this.busId, x: 'event', name: event.name, data: event.data}));
     }
@@ -188,7 +189,7 @@ export class Bus
         this.queryHandlers.set(query, handler);
     }
 
-    public async execute(busId: string, query: Query): Promise<Result>
+    public async execute(busId: string, query: Query<any>): Promise<Result>
     {
         const id = Date.now();
 
